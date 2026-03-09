@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware # <--- ИМПОРТИРУЕМ CORS
 from app.database import engine, Base
 import app.models
 from app.routers import users, game, shop
@@ -13,6 +14,15 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Capybara Game API",
     lifespan=lifespan
+)
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Разрешаем запросы с любых сайтов
+    allow_credentials=True,
+    allow_methods=["*"],  # Разрешаем любые методы (GET, POST)
+    allow_headers=["*"],  # Разрешаем любые заголовки
 )
 
 app.include_router(users.router)
