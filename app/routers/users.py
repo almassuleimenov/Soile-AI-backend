@@ -5,6 +5,7 @@ from app import models, schemas, database
 
 router = APIRouter(prefix="/api/users", tags=["Users"])
 
+
 @router.get("/me", response_model=schemas.UserResponse)
 async def get_current_user(db: AsyncSession = Depends(database.get_db)):
     result = await db.execute(select(models.User).where(models.User.id == 1))

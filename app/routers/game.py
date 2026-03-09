@@ -5,8 +5,11 @@ from app import models, schemas, database
 
 router = APIRouter(prefix="/api/game", tags=["Game"])
 
+
 @router.post("/finish", response_model=schemas.UserResponse)
-async def finish_level(game_data: schemas.GameFinish, db: AsyncSession = Depends(database.get_db)):
+async def finish_level(
+    game_data: schemas.GameFinish, db: AsyncSession = Depends(database.get_db)
+):
     result = await db.execute(select(models.User).where(models.User.id == 1))
     user = result.scalars().first()
 
@@ -19,5 +22,5 @@ async def finish_level(game_data: schemas.GameFinish, db: AsyncSession = Depends
 
     await db.commit()
     await db.refresh(user)
-    
+
     return user

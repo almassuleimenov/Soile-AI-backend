@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, BigInteger
 from sqlalchemy.orm import relationship
 from app.database import Base
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -12,6 +13,7 @@ class User(Base):
 
     skins = relationship("UserSkin", back_populates="user")
 
+
 class Skin(Base):
     __tablename__ = "skins"
 
@@ -20,6 +22,7 @@ class Skin(Base):
     emoji = Column(String)
     price = Column(Integer)
     color = Column(BigInteger)
+
 
 class UserSkin(Base):
     __tablename__ = "user_skins"

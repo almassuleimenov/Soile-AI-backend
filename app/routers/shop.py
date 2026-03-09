@@ -15,6 +15,7 @@ DEFAULT_SKINS = [
     {"name": "Король", "emoji": "🤴", "price": 500, "color": 0xFFFFF9C4},
 ]
 
+
 @router.get("/skins", response_model=List[schemas.SkinResponse])
 async def get_all_skins(db: AsyncSession = Depends(database.get_db)):
     result = await db.execute(select(models.Skin))
@@ -25,11 +26,12 @@ async def get_all_skins(db: AsyncSession = Depends(database.get_db)):
             new_skin = models.Skin(**skin_data)
             db.add(new_skin)
         await db.commit()
-        
+
         result = await db.execute(select(models.Skin))
         skins = result.scalars().all()
 
     return skins
+
 
 @router.post("/buy/{skin_id}")
 async def buy_skin(skin_id: int, db: AsyncSession = Depends(database.get_db)):
@@ -59,7 +61,7 @@ async def buy_skin(skin_id: int, db: AsyncSession = Depends(database.get_db)):
     user.coins -= skin.price
     user_skin = models.UserSkin(user_id=user.id, skin_id=skin.id)
     db.add(user_skin)
-    
+
     await db.commit()
-    
+
     return {"message": "Success", "coins_left": user.coins}

@@ -1,9 +1,10 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware # <--- ИМПОРТИРУЕМ CORS
+from fastapi.middleware.cors import CORSMiddleware  # <--- ИМПОРТИРУЕМ CORS
 from app.database import engine, Base
 import app.models
 from app.routers import users, game, shop
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -11,10 +12,8 @@ async def lifespan(app: FastAPI):
         await conn.run_sync(Base.metadata.create_all)
     yield
 
-app = FastAPI(
-    title="Capybara Game API",
-    lifespan=lifespan
-)
+
+app = FastAPI(title="Capybara Game API", lifespan=lifespan)
 
 
 app.add_middleware(
@@ -28,6 +27,7 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(game.router)
 app.include_router(shop.router)
+
 
 @app.get("/ping")
 async def ping():
