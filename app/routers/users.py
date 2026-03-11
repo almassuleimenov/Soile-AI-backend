@@ -39,7 +39,6 @@ async def get_current_user(db: AsyncSession = Depends(database.get_db)):
 
 from sqlalchemy import desc
 
-# ... твой код get_current_user ...
 
 @router.get("/analytics", response_model=schemas.AnalyticsResponse)
 async def get_analytics(db: AsyncSession = Depends(database.get_db)):
