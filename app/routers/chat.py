@@ -1,18 +1,16 @@
+import os
 from fastapi import APIRouter, HTTPException
 from groq import AsyncGroq
 from app import schemas
-import os
-api_key = os.getenv("GROQ_API_KEY")
 
 router = APIRouter(prefix="/api/chat", tags=["Chat"])
 
+api_key = os.getenv("GROQ_API_KEY")
 
-# Инициализируем асинхронный клиент Groq
 client = AsyncGroq(api_key=api_key)
 
 @router.post("/ask", response_model=schemas.ChatResponse)
 async def ask_ai(request: schemas.ChatRequest):
-    # Настраиваем личность ИИ (System Prompt) в зависимости от языка
     if request.language == 'kz':
         system_prompt = """Сен 'Soile AI' мобильді қосымшасының виртуалды логопедісің. 
         Сенің мақсатың - балалардың сөйлеу қабілетін дамытуға қатысты ата-аналардың сұрақтарына қысқа, нақты және мейірімді жауап беру. 
@@ -23,14 +21,13 @@ async def ask_ai(request: schemas.ChatRequest):
         Отвечай на русском языке. Не пиши слишком длинно, максимум 3-4 предложения. Используй эмодзи."""
 
     try:
-        # Обращаемся к модели LLaMA 3 (8B - очень быстрая и умная)
         chat_completion = await client.chat.completions.create(
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": request.message}
             ],
-            model="llama3-8b-8192",
-            temperature=0.7, # Баланс между креативностью и точностью
+            model="llama-3.3-70b-versatile", 
+            temperature=0.7, 
             max_tokens=300,
         )
         
