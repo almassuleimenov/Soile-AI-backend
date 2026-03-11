@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, BigInteger, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, BigInteger, Date, DateTime
 from sqlalchemy.orm import relationship
+from datetime import datetime, timezone
 from app.database import Base
 
 class User(Base):
@@ -14,6 +15,7 @@ class User(Base):
     last_login = Column(Date, nullable=True)
 
     skins = relationship("UserSkin", back_populates="user")
+    logs = relationship("ActionLog", back_populates="user") # <-- Связь с историей
 
 class Skin(Base):
     __tablename__ = "skins"
@@ -32,3 +34,16 @@ class UserSkin(Base):
     skin_id = Column(Integer, ForeignKey("skins.id"))
 
     user = relationship("User", back_populates="skins")
+
+# --- НОВАЯ ТАБЛИЦА: ИСТОРИЯ ДЕЙСТВИЙ ---
+class ActionLog(Base):
+    __tablename__ = "action_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    emoji = Column(String)
+    action_kz = Column(String) # Описание на казахском
+    action_ru = Column(String) # Описание на русском
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    user = relationship("User", back_populates="logs")

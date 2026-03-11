@@ -61,6 +61,14 @@ async def buy_skin(skin_id: int, db: AsyncSession = Depends(database.get_db)):
     user.coins -= skin.price
     user_skin = models.UserSkin(user_id=user.id, skin_id=skin.id)
     db.add(user_skin)
+    
+    new_log = models.ActionLog(
+        user_id=user.id,
+        emoji="🛒",
+        action_kz=f"'{skin.name}' скинін сатып алды",
+        action_ru=f"Покупка скина '{skin.name}'"
+    )
+    db.add(new_log)
 
     await db.commit()
 

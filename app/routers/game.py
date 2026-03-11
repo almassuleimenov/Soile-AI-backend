@@ -5,11 +5,8 @@ from app import models, schemas, database
 
 router = APIRouter(prefix="/api/game", tags=["Game"])
 
-
 @router.post("/finish", response_model=schemas.UserResponse)
-async def finish_level(
-    game_data: schemas.GameFinish, db: AsyncSession = Depends(database.get_db)
-):
+async def finish_level(game_data: schemas.GameFinish, db: AsyncSession = Depends(database.get_db)):
     result = await db.execute(select(models.User).where(models.User.id == 1))
     user = result.scalars().first()
 
@@ -20,7 +17,15 @@ async def finish_level(
     if game_data.level >= user.current_level:
         user.current_level = game_data.level + 1
 
+    # --- ЗАПИСЫВАЕМ ДЕЙСТВИЕ В ИСТОРИЮ ---
+    new_log = models.ActionLog(
+        user_id=user.id,
+        emoji="🗣️",
+        action_kz=f"{game_data.level}-ші деңгейді сәтті аяқтады",
+        action_ru=f"Успешно пройден уровень {game_data.level}"
+    )
+    db.add(new_log)
+
     await db.commit()
     await db.refresh(user)
-
     return user

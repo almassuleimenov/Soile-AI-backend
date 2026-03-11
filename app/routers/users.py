@@ -36,3 +36,29 @@ async def get_current_user(db: AsyncSession = Depends(database.get_db)):
             await db.refresh(user)
 
     return user
+
+from sqlalchemy import desc
+
+# ... твой код get_current_user ...
+
+@router.get("/analytics", response_model=schemas.AnalyticsResponse)
+async def get_analytics(db: AsyncSession = Depends(database.get_db)):
+    logs_result = await db.execute(
+        select(models.ActionLog)
+        .where(models.ActionLog.user_id == 1)
+        .order_by(desc(models.ActionLog.created_at))
+        .limit(5)
+    )
+    recent_logs = logs_result.scalars().all()
+
+    total_logs_result = await db.execute(select(models.ActionLog).where(models.ActionLog.user_id == 1))
+    total_logs = len(total_logs_result.scalars().all())
+    total_time = total_logs * 5 
+    
+    weekly = [15, 30, 10, 45, 20, 15, min(total_time, 50)]
+
+    return schemas.AnalyticsResponse(
+        total_minutes=total_time,
+        weekly_minutes=weekly,
+        recent_actions=recent_logs
+    )

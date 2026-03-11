@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from pydantic import BaseModel
@@ -38,3 +39,16 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     reply: str
+class ActionLogResponse(BaseModel):
+    emoji: str
+    action_kz: str
+    action_ru: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class AnalyticsResponse(BaseModel):
+    total_minutes: int
+    weekly_minutes: List[int] # Список из 7 чисел для графика
+    recent_actions: List[ActionLogResponse] # Последние действия
