@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel
 
 class SkinBase(BaseModel):
@@ -24,8 +26,11 @@ class UserResponse(UserBase):
 class GameFinish(BaseModel):
     level: int
     score: int
+class MessageItem(BaseModel):
+    role: str
+    content: str
 class ChatRequest(BaseModel):
-    message: str
+    messages: List[MessageItem]
     language: str# Будем передавать 'kz' или 'ru', чтобы ИИ знал, на каком языке отвечать
     child_age: int | None = None      # Возраст
     child_gender: str | None = None   # 'boy' или 'girl'
