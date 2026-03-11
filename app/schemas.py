@@ -26,7 +26,10 @@ class GameFinish(BaseModel):
     score: int
 class ChatRequest(BaseModel):
     message: str
-    language: str  # Будем передавать 'kz' или 'ru', чтобы ИИ знал, на каком языке отвечать
+    language: str# Будем передавать 'kz' или 'ru', чтобы ИИ знал, на каком языке отвечать
+    child_age: int | None = None      # Возраст
+    child_gender: str | None = None   # 'boy' или 'girl'
+    parent_goal: str | None = None
 
 class ChatResponse(BaseModel):
     reply: str
