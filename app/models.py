@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, BigInteger
+from sqlalchemy import Column, Integer, String, ForeignKey, BigInteger, Date
 from sqlalchemy.orm import relationship
 from app.database import Base
-
 
 class User(Base):
     __tablename__ = "users"
@@ -10,9 +9,11 @@ class User(Base):
     name = Column(String, default="Батыр")
     coins = Column(Integer, default=100)
     current_level = Column(Integer, default=1)
+    
+    streak_days = Column(Integer, default=1) 
+    last_login = Column(Date, nullable=True)
 
     skins = relationship("UserSkin", back_populates="user")
-
 
 class Skin(Base):
     __tablename__ = "skins"
@@ -22,7 +23,6 @@ class Skin(Base):
     emoji = Column(String)
     price = Column(Integer)
     color = Column(BigInteger)
-
 
 class UserSkin(Base):
     __tablename__ = "user_skins"
