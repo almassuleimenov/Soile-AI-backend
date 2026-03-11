@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware  # <--- ИМПОРТИРУЕМ CORS
 from app.database import engine, Base
 import app.models
-from app.routers import users, game, shop
+from app.routers import users, game, shop ,chat
 
 
 @asynccontextmanager
@@ -28,6 +28,7 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(game.router)
 app.include_router(shop.router)
+app.include_router(chat.router)
 
 
 @app.get("/ping")

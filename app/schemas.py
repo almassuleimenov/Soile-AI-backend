@@ -24,3 +24,9 @@ class UserResponse(UserBase):
 class GameFinish(BaseModel):
     level: int
     score: int
+class ChatRequest(BaseModel):
+    message: str
+    language: str  # Будем передавать 'kz' или 'ru', чтобы ИИ знал, на каком языке отвечать
+
+class ChatResponse(BaseModel):
+    reply: str
