@@ -9,6 +9,7 @@ from app.routers import users, game, shop ,chat
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
     yield
 
