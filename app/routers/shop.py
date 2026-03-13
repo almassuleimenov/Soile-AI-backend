@@ -66,7 +66,8 @@ async def buy_skin(skin_id: int, db: AsyncSession = Depends(database.get_db)):
         user_id=user.id,
         emoji="🛒",
         action_kz=f"'{skin.name}' скинін сатып алды",
-        action_ru=f"Покупка скина '{skin.name}'"
+        action_ru=f"Покупка скина '{skin.name}'",
+        # action_en=f"Purchased skin '{skin.name}'" # <-- Раскомментируй, когда добавишь в models.py
     )
     db.add(new_log)
 
